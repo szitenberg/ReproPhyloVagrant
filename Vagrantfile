@@ -7,13 +7,13 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 8888, host: 8888
   # config.vm.network "private_network", ip: "192.168.33.10"
   # config.vm.network "public_network"
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "./notebooks", "/vagrant_notebooks"
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.memory = "1024"
   end
   # config.push.define "atlas" do |push|
-  #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
+  #   push.app = "gawbul/ReproPhylo"
   # end
   config.vm.provision "shell", path: "bootstrap.sh"
   # config.vm.provision "shell", path: "notepad.sh"

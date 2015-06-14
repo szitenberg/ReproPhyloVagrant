@@ -12,8 +12,11 @@ apt-get -y -qq install python python-dev python-pip python-setuptools
 apt-get -y -qq install python-numpy python-scipy python-qt4 python-mysqldb python-lxml python-biopython python-pandas
 apt-get -y -qq build-dep python-matplotlib
 apt-get -y -qq install python-matplotlib
+
+# install ipython and dependencies
 apt-get -y -qq build-dep ipython ipython-notebook
 apt-get -y -qq install ipython ipython-notebook
+python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"
 
 # install reprophylo dependencies
 apt-get -y -qq install exonerate mafft muscle raxml
@@ -46,16 +49,30 @@ chmod a+x BayesTraitsV2
 # install pal2nal
 cd ../pal2nal.v14
 chmod a+x pal2nal.pl
-# move file to vagrant home
+
+# move files to vagrant home
 mv ~/bin /home/vagrant
 mv ~/tools /home/vagrant
-
-# clone ReproPhylo
-git clone https://github.com/HullUni-bioinformatics/ReproPhylo.git /home/vagrant/ReproPhylo
+mv /vagrant/reprophylo /home/vagrant
 
 # create cert for notebook
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /home/vagrant/key.pem \
-  -out /home/vagrant/key.pem -subj "/C=RP/ST=RP/L=RP/O=ReproPhylo/CN=ReproPhylo"
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /home/vagrant/rpcert.pem \
+  -out /home/vagrant/rpcert.pem -subj "/C=RP/ST=RP/L=RP/O=ReproPhylo/CN=ReproPhylo"
+
+# create notebook profile
+su - vagrant -c 'ipython profile create nbserver'
+cat << EOF > /home/vagrant/.ipython/profile_nbserver/ipython_notebook_config.py
+c.IPKernelApp.pylab = 'inline'  # if you want plotting support always
+c.NotebookApp.certfile = u'/home/vagrant/rpcert.pem'
+c.NotebookApp.ip = '*'
+c.NotebookApp.open_browser = False
+c.NotebookApp.password = u'sha1:bcd259ccf...[your hashed password here]'
+c.NotebookApp.port = 8888
+c.NotebookApp.notebook_dir = u'/vagrant_data'
+EOF
+
+# setup git
+su - vagrant -c 'git config --global user.email "reprophylo@repro.phylo"'
 
 # setup symlinks
 ln -s /home/vagrant/tools/trimAl/source/trimal /home/vagrant/bin/trimal
@@ -68,3 +85,4 @@ chown -R vagrant:vagrant /home/vagrant
 
 # setup path
 su - vagrant -c 'echo "export PATH=~/bin:$PATH" >> ~/.bashrc'
+su - vagrant -c 'echo "export PYTHONPATH=~/reprophylo:$PYTHONPATH" >> ~/.bashrc'
