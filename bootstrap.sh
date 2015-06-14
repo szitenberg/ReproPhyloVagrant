@@ -12,6 +12,8 @@ apt-get -y -qq install python python-dev python-pip python-setuptools
 apt-get -y -qq install python-numpy python-scipy python-qt4 python-mysqldb python-lxml python-biopython python-pandas
 apt-get -y -qq build-dep python-matplotlib
 apt-get -y -qq install python-matplotlib
+apt-get -y -qq build-dep ipython ipython-notebook
+apt-get -y -qq install ipython ipython-notebook
 
 # install reprophylo dependencies
 apt-get -y -qq install exonerate mafft muscle raxml
@@ -48,6 +50,13 @@ chmod a+x pal2nal.pl
 mv ~/bin /home/vagrant
 mv ~/tools /home/vagrant
 
+# clone ReproPhylo
+git clone https://github.com/HullUni-bioinformatics/ReproPhylo.git /home/vagrant/ReproPhylo
+
+# create cert for notebook
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /home/vagrant/key.pem \
+  -out /home/vagrant/key.pem -subj "/C=RP/ST=RP/L=RP/O=ReproPhylo/CN=ReproPhylo"
+
 # setup symlinks
 ln -s /home/vagrant/tools/trimAl/source/trimal /home/vagrant/bin/trimal
 ln -s /home/vagrant/tools/trimAl/source/readal /home/vagrant/bin/readal
@@ -56,3 +65,6 @@ ln -s /home/vagrant/tools/pal2nal.v14/pal2nal.pl /home/vagrant/bin/pal2nal.pl
 
 # fix ownership
 chown -R vagrant:vagrant /home/vagrant
+
+# setup path
+su - vagrant -c 'echo "export PATH=~/bin:$PATH" >> ~/.bashrc'
