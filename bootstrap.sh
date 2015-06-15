@@ -66,9 +66,9 @@ c.IPKernelApp.pylab = 'inline'  # if you want plotting support always
 c.NotebookApp.certfile = u'/home/vagrant/rpcert.pem'
 c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False
-c.NotebookApp.password = u'sha1:bcd259ccf...[your hashed password here]'
+c.NotebookApp.password = u'sha1:32d7842eb33f:b07722e1e9f912cf2bb0cb208944e979d54f716e'
 c.NotebookApp.port = 8888
-c.NotebookApp.notebook_dir = u'/vagrant_data'
+c.NotebookApp.notebook_dir = u'/vagrant_notebooks'
 EOF
 
 # setup git
