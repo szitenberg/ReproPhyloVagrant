@@ -21,7 +21,7 @@ pip install --upgrade --quiet ipython["notebook"]
 python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"
 
 # install other python dependencies
-pip install --upgrade --quiet biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas scipy
+pip install --upgrade --quiet biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas pyqt4 scipy
 
 # create local bin
 mkdir -p ~/bin
