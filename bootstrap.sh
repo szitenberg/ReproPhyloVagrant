@@ -9,20 +9,19 @@ apt-get -y -q install wget curl
 
 # install python modules
 apt-get -y -qq install python python-dev python-pip python-setuptools
-apt-get -y -qq install python-numpy python-scipy python-qt4 python-mysqldb python-lxml python-biopython python-pandas
-apt-get -y -qq build-dep python-matplotlib
-apt-get -y -qq install python-matplotlib
-
-# install ipython and dependencies
-apt-get -y -qq build-dep ipython ipython-notebook
-apt-get -y -qq install ipython ipython-notebook
-python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"
+apt-get -y -qq build-dep python-lxml python-mysqldb python-numpy python-scipy python-qt4
+apt-get -y -qq build-dep python-biopython python-matplotlib python-pandas
 
 # install reprophylo dependencies
 apt-get -y -qq install exonerate mafft muscle raxml
 
+# install ipython and dependencies
+pip install --upgrade --quiet ipython["all"]
+pip install --upgrade --quiet ipython["notebook"]
+python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"
+
 # install other python dependencies
-pip install --upgrade --force-reinstall --quiet cloud dendropy ete2
+pip install --upgrade --quiet biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas scipy
 
 # create local bin
 mkdir -p ~/bin
@@ -62,6 +61,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /home/vagrant/rpcert
 # create notebook profile
 su - vagrant -c 'ipython profile create nbserver'
 cat << EOF > /home/vagrant/.ipython/profile_nbserver/ipython_notebook_config.py
+c = get_config()
 c.IPKernelApp.pylab = 'inline'  # if you want plotting support always
 c.NotebookApp.certfile = u'/home/vagrant/rpcert.pem'
 c.NotebookApp.ip = '*'
@@ -86,3 +86,7 @@ chown -R vagrant:vagrant /home/vagrant
 # setup path
 su - vagrant -c 'echo "export PATH=~/bin:$PATH" >> ~/.bashrc'
 su - vagrant -c 'echo "export PYTHONPATH=~/reprophylo:$PYTHONPATH" >> ~/.bashrc'
+
+# create notebook shell script
+su - vagrant -c 'echo "#!/bin/bash\nipython notebook --profile=nbserver &" > ~/notebook.sh'
+chmod a+x /home/vagrant/notebook.sh
