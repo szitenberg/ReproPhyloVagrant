@@ -5,6 +5,9 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.box_check_update = true
   config.vm.network "forwarded_port", guest: 8888, host: 8888
+  for i in 60001..60005
+    config.vm.network "forwarded_port", guest: i, host: i, autocorrect: true
+  end
   # config.vm.network "private_network", ip: "192.168.33.10"
   # config.vm.network "public_network"
   config.vm.synced_folder "./notebooks", "/vagrant_notebooks"

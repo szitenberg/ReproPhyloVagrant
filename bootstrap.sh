@@ -4,8 +4,9 @@ apt-get update
 apt-get -y -qq upgrade
 
 # install developer tools and dependencies
-apt-get -y -qq install build-essential zlib1g-dev git libzmq3-dev sqlite3 libsqlite3-dev pandoc libcurl4-openssl-dev nodejs
-apt-get -y -q install wget curl
+apt-get -y -qq install build-essential git libzmq3-dev sqlite3 pandoc libcurl4-openssl-dev nodejs
+apt-get -y -qq install gcc-multilib g++-multilib libffi-dev libffi6 libffi6-dbg python-crypto python-mox3 python-pil python-ply libssl-dev zlib1g-dev libbz2-dev libexpat1-dev libbluetooth-dev libgdbm-dev dpkg-dev quilt autotools-dev libreadline-dev libtinfo-dev libncursesw5-dev tk-dev blt-dev libssl-dev zlib1g-dev libbz2-dev libexpat1-dev libbluetooth-dev libsqlite3-dev libgpm2 mime-support netbase net-tools bzip2
+apt-get -y -qq install wget curl
 
 # install python modules
 apt-get -y -qq install python python-dev python-pip python-setuptools
@@ -15,13 +16,26 @@ apt-get -y -qq build-dep python-biopython python-matplotlib python-pandas
 # install reprophylo dependencies
 apt-get -y -qq install exonerate mafft muscle raxml
 
+# install python 2.7.9
+wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
+tar zxf Python-2.7.9.tgz
+cd Python-2.7.9/
+./configure --enable-ipv6
+make
+make install
+rm -rf Python-2.7.9*
+export PATH=/usr/local/bin:$PATH
+
 # install ipython and dependencies
-pip install --upgrade --quiet ipython["all"]
-pip install --upgrade --quiet ipython["notebook"]
-python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"
+easy_install --upgrade --quiet pip
+pip install --upgrade --quiet setuptools pip
+pip install --upgrade --quiet pyopenssl
+pip install --upgrade ipython["all"]
+pip install --upgrade ipython["notebook"]
+su - vagrant -c 'python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"'
 
 # install other python dependencies
-pip install --upgrade --quiet biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas pyqt4 scipy
+pip install --upgrade biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas pyqt4 scipy
 
 # create local bin
 mkdir -p ~/bin
@@ -52,7 +66,7 @@ chmod a+x pal2nal.pl
 # move files to vagrant home
 mv ~/bin /home/vagrant
 mv ~/tools /home/vagrant
-mv /vagrant/reprophylo /home/vagrant
+cp /vagrant/reprophylo /home/vagrant
 
 # create cert for notebook
 openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /home/vagrant/rpcert.pem \
@@ -69,6 +83,11 @@ c.NotebookApp.open_browser = False
 c.NotebookApp.password = u'sha1:32d7842eb33f:b07722e1e9f912cf2bb0cb208944e979d54f716e'
 c.NotebookApp.port = 8888
 c.NotebookApp.notebook_dir = u'/vagrant_notebooks'
+c.KernelManager.control_port = 60001
+c.KernelManager.shell_port = 60002
+c.KernelManager.stdin_port = 60003
+c.KernelManager.hb_port = 60004
+c.KernelManager.iopub_port = 60005
 EOF
 
 # setup git
@@ -84,7 +103,7 @@ ln -s /home/vagrant/tools/pal2nal.v14/pal2nal.pl /home/vagrant/bin/pal2nal.pl
 chown -R vagrant:vagrant /home/vagrant
 
 # setup path
-su - vagrant -c 'echo "export PATH=~/bin:$PATH" >> ~/.bashrc'
+su - vagrant -c 'echo "export PATH=~/bin:/usr/local/bin:$PATH" >> ~/.bashrc'
 su - vagrant -c 'echo "export PYTHONPATH=~/reprophylo:$PYTHONPATH" >> ~/.bashrc'
 
 # create notebook shell script
