@@ -3,13 +3,19 @@
 sudo apt-get update
 sudo apt-get -y -qq upgrade
 
+#x11
+sudo apt-get install virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
+sudo apt-get install xserver-xorg-core xserver-xorg xorg xauth
+sudo xinit
+sudo xstart
+
 # install developer tools and dependencies
 sudo apt-get -y -qq install build-essential git libzmq3-dev sqlite3 pandoc libcurl4-openssl-dev nodejs
 sudo apt-get -y -qq install gcc-multilib g++-multilib libffi-dev libffi6 libffi6-dbg python-crypto \
   python-mox3 python-pil python-ply libssl-dev zlib1g-dev libbz2-dev libexpat1-dev libbluetooth-dev \
   libgdbm-dev dpkg-dev quilt autotools-dev libreadline-dev libtinfo-dev libncursesw5-dev tk-dev blt-dev \
   libssl-dev zlib1g-dev libbz2-dev libexpat1-dev libbluetooth-dev libsqlite3-dev libgpm2 mime-support \
-  netbase net-tools bzip2 xserver-xorg-core xserver-xorg xorg openbox libreadline-dev
+  netbase net-tools bzip2 libreadline-dev
 sudo apt-get -y -qq install wget curl
 
 # install python modules
