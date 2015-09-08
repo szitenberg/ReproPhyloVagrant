@@ -111,5 +111,5 @@ su - vagrant -c 'echo "export PATH=~/bin:/usr/local/bin:$PATH" >> ~/.bashrc'
 su - vagrant -c 'echo "export PYTHONPATH=~/reprophylo:$PYTHONPATH" >> ~/.bashrc'
 
 # create notebook shell script
-su - vagrant -c 'echo -e "#!/bin/bash\nipython notebook --profile=nbserver &" > ~/notebook.sh'
+su - vagrant -c 'echo "#!/bin/bash\nipython notebook --profile=nbserver &" > ~/notebook.sh'
 chmod a+x /home/vagrant/notebook.sh
