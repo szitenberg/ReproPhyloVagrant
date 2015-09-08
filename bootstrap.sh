@@ -4,8 +4,8 @@ sudo apt-get update
 sudo apt-get -y -qq upgrade
 
 #x11
-sudo apt-get install virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
-sudo apt-get install xserver-xorg-core xserver-xorg xorg xauth
+sudo apt-get -y -qq install virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
+sudo apt-get -y -qq install xserver-xorg-core xserver-xorg xorg xauth
 sudo xinit
 sudo xstart
 
@@ -45,7 +45,7 @@ sudo pip install --upgrade ipython["notebook"]
 #su - vagrant -c 'python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"'
 
 # install other python dependencies
-sudo pip install readline biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas pyqt4 scipy
+sudo pip install --quiet readline biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas pyqt4 scipy
 
 # create local bin
 mkdir -p ~/bin
