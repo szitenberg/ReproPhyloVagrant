@@ -4,7 +4,7 @@ sudo apt-get update
 sudo apt-get -y -qq upgrade
 sudo apt-get update -y -qq --fix-missing
 
-#x11
+# failed attempts at x11 based on http://askubuntu.com/questions/26610/how-can-i-force-x-to-start-in-a-computer-without-a-monitor
 sudo apt-get -y -qq install virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
 sudo apt-get -y -qq install xserver-xorg-core xserver-xorg xorg xauth openbox
 sudo Xorg -configure
@@ -110,6 +110,9 @@ cd ../pal2nal.v14
 chmod a+x pal2nal.pl
 
 # move files to vagrant home
+chmod a+x /vagrant/reprophylo/raxmlHPC-PTHREADS-SSE3
+mv /vagrant/reprophylo/raxmlHPC-PTHREADS-SSE3 ~/bin/.
+cp ~/bin/raxmlHPC-PTHREADS-SSE3 ~/tools/.
 mv ~/bin /home/vagrant
 mv ~/tools /home/vagrant
 cp /vagrant/reprophylo /home/vagrant
@@ -144,6 +147,7 @@ ln -s /home/vagrant/tools/trimAl/source/trimal /home/vagrant/bin/trimal
 ln -s /home/vagrant/tools/trimAl/source/readal /home/vagrant/bin/readal
 ln -s /home/vagrant/tools/BayesTraitsV2/BayesTraitsV2 /home/vagrant/bin/BayesTraitsV2
 ln -s /home/vagrant/tools/pal2nal.v14/pal2nal.pl /home/vagrant/bin/pal2nal.pl
+ln -s /home/vagrant/tools/pal2nal.v14/raxmlHPC-PTHREADS-SSE3 /home/vagrant/bin/raxmlHPC-PTHREADS-SSE3
 
 # fix ownership
 chown -R vagrant:vagrant /home/vagrant
