@@ -13,6 +13,6 @@ vagrant up
 vagrant ssh
 ```
 
-Once in the VM you can run `./notebook.sh` to start the Jupyter notebook server.
+Once in the VM you can run `startRP.sh` to start the Jupyter notebook server.
 This will be accessible through your web browser at [https://localhost:8888/](https://localhost:8888/).
 The default password for the notebook server is *reprophylo*.

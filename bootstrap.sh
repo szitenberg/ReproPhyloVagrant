@@ -5,8 +5,7 @@ sudo apt-get -y -qq upgrade
 sudo apt-get update -y -qq --fix-missing
 
 # X11
-sudo apt-get install -y --qq 
-
+sudo apt-get -y install xvfb libexif-dev
 
 # install developer tools and dependencies
 sudo apt-get -y -qq install build-essential git libzmq3-dev sqlite3 pandoc libcurl4-openssl-dev nodejs
