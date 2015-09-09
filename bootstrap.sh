@@ -4,40 +4,8 @@ sudo apt-get update
 sudo apt-get -y -qq upgrade
 sudo apt-get update -y -qq --fix-missing
 
-# failed attempts at x11 based on http://askubuntu.com/questions/26610/how-can-i-force-x-to-start-in-a-computer-without-a-monitor
-sudo apt-get -y -qq install virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
-sudo apt-get -y -qq install xserver-xorg-core xserver-xorg xorg xauth openbox
-sudo Xorg -configure
-mkdir /etc
-mkdir /etc/X11
-cat << EOF > /etc/X11/xorg.conf
-Section "Device"
-Identifier "VNC Device"
-Driver "vesa"
-EndSection
-
-Section "Screen"
-Identifier "VNC Screen"
-Device "VNC Device"
-Monitor "VNC Monitor"
-SubSection "Display"
-Modes "1024x768"
-EndSubSection
-EndSection
-
-Section "Monitor"
-Identifier "VNC Monitor"
-HorizSync 30-70
-VertRefresh 50-75
-EndSection
-EOF
-
-mkdir /etc/modprobe.d
-cat << EOF > /etc/modprobe.d/i915-kms.conf
-options i915 modeset=0
-EOF
-
-#sudo xinit
+# X11
+sudo apt-get install -y --qq 
 
 
 # install developer tools and dependencies
@@ -110,6 +78,7 @@ cd ../pal2nal.v14
 chmod a+x pal2nal.pl
 
 # move files to vagrant home
+chown vagrant:vagrant /vagrant/reprophylo/raxmlHPC-PTHREADS-SSE3
 chmod a+x /vagrant/reprophylo/raxmlHPC-PTHREADS-SSE3
 mv /vagrant/reprophylo/raxmlHPC-PTHREADS-SSE3 ~/bin/.
 cp ~/bin/raxmlHPC-PTHREADS-SSE3 ~/tools/.
@@ -120,24 +89,6 @@ cp /vagrant/reprophylo /home/vagrant
 # create cert for notebook
 openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /home/vagrant/rpcert.pem \
   -out /home/vagrant/rpcert.pem -subj "/C=RP/ST=RP/L=RP/O=ReproPhylo/CN=ReproPhylo"
-
-# create notebook profile
-#su - vagrant -c 'ipython profile create nbserver'
-#cat << EOF > /home/vagrant/.ipython/profile_nbserver/ipython_notebook_config.py
-#c = get_config()
-#c.IPKernelApp.pylab = 'inline'  # if you want plotting support always
-#c.NotebookApp.certfile = u'/home/vagrant/rpcert.pem'
-#c.NotebookApp.ip = '*'
-#c.NotebookApp.open_browser = False
-#c.NotebookApp.password = u'sha1:32d7842eb33f:b07722e1e9f912cf2bb0cb208944e979d54f716e'
-#c.NotebookApp.port = 8888
-#c.NotebookApp.notebook_dir = u'/vagrant_notebooks'
-#c.KernelManager.control_port = 60001
-#c.KernelManager.shell_port = 60002
-#c.KernelManager.stdin_port = 60003
-#c.KernelManager.hb_port = 60004
-#c.KernelManager.iopub_port = 60005
-#EOF
 
 # setup git
 su - vagrant -c 'git config --global user.email "reprophylo@repro.phylo"'
@@ -169,4 +120,11 @@ ipython notebook --NotebookApp.certfile='/home/vagrant/rpcert.pem'\
  --KernelManager.iopub_port=60005
 EOF
 
+cat << EOF > /home/vagrant/startRP.sh
+#!/bin/bash
+xvfb-run /home/vagrant/notebook.sh
+EOF
+
 chmod a+x /home/vagrant/notebook.sh
+chmod a+x /home/vagrant/startRP.sh
+mv /home/vagrant/startRP.sh ~/bin/.
