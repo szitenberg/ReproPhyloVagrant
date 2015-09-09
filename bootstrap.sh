@@ -110,6 +110,7 @@ ln -s /home/vagrant/tools/phylobayes4.1b/data/bpcomp /home/vagrant/bin/bpcomp
 
 # fix ownership
 chown -R vagrant:vagrant /home/vagrant
+chmod a+x /home/vagrant/tools/raxmlHPC-PTHREADS-SSE3
 
 # setup path
 su - vagrant -c 'echo "export PATH=~/bin:/usr/local/bin:/vagrant/reprophylo:$PATH" >> /home/vagrant/.bashrc'
