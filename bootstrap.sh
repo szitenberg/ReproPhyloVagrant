@@ -127,4 +127,4 @@ EOF
 
 chmod a+x /home/vagrant/notebook.sh
 chmod a+x /home/vagrant/startRP.sh
-mv /home/vagrant/startRP.sh ~/bin/.
+mv /home/vagrant/startRP.sh /home/vagrant/bin/.
