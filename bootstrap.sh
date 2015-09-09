@@ -2,12 +2,43 @@
 # update base image
 sudo apt-get update
 sudo apt-get -y -qq upgrade
+sudo apt-get update -y -qq --fix-missing
 
 #x11
 sudo apt-get -y -qq install virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
-sudo apt-get -y -qq install xserver-xorg-core xserver-xorg xorg xauth
-sudo xinit
-sudo xstart
+sudo apt-get -y -qq install xserver-xorg-core xserver-xorg xorg xauth openbox
+sudo Xorg -configure
+mkdir /etc
+mkdir /etc/X11
+cat << EOF > /etc/X11/xorg.conf
+Section "Device"
+Identifier "VNC Device"
+Driver "vesa"
+EndSection
+
+Section "Screen"
+Identifier "VNC Screen"
+Device "VNC Device"
+Monitor "VNC Monitor"
+SubSection "Display"
+Modes "1024x768"
+EndSubSection
+EndSection
+
+Section "Monitor"
+Identifier "VNC Monitor"
+HorizSync 30-70
+VertRefresh 50-75
+EndSection
+EOF
+
+mkdir /etc/modprobe.d
+cat << EOF > /etc/modprobe.d/i915-kms.conf
+options i915 modeset=0
+EOF
+
+#sudo xinit
+
 
 # install developer tools and dependencies
 sudo apt-get -y -qq install build-essential git libzmq3-dev sqlite3 pandoc libcurl4-openssl-dev nodejs
@@ -45,7 +76,12 @@ sudo pip install --upgrade ipython["notebook"]
 #su - vagrant -c 'python -c "from IPython.external.mathjax import install_mathjax; install_mathjax()"'
 
 # install other python dependencies
-sudo pip install --quiet readline biopython cloud dendropy ete2 lxml matplotlib mysql-python numpy pandas pyqt4 scipy
+sudo apt-get install python-setuptools python-numpy python-qt4 python-scipy python-mysqldb python-lxml -y
+sudo apt-get install python-biopython -y
+sudo apt-get build-dep python-matplotlib -y
+sudo apt-get install python-matplotlib -y
+
+sudo pip install --quiet cloud dendropy ete2 pandas
 
 # create local bin
 mkdir -p ~/bin
